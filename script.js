@@ -5,7 +5,7 @@ let buton = document.querySelector("#gosterBtn");
 const mesaj = "Napıyorsun Fuckkass??";
 
 function showFancyText(text){
-    // temizle
+    // temizle 
     yazi_ekrani.innerHTML = "";
     yazi_ekrani.classList.remove('reveal');
     yazi_ekrani.style.position = 'relative';
