@@ -2,7 +2,7 @@ let yazi_ekrani = document.querySelector("#yazi");
 let buton = document.querySelector("#gosterBtn");
 
 // güvenli, şaka amaçlı gösterilecek metin
-const mesaj = "Fuckkass!!!";
+const mesaj = "Napıyorsun Fuckkass??";
 
 function showFancyText(text){
     // temizle
