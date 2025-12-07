@@ -1,0 +1,267 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    /* hareketli degrade arka plan */
+    background: linear-gradient(135deg, #b6f58d 0%, #8be3a0 40%, #4fc7b2 100%);
+    background-size: 300% 300%;
+    animation: gradientShift 12s ease infinite;
+}
+
+/* buton görünümü + hover/active animasyonları + basma "ripple" efekti (pseudo-element) */
+#gosterBtn {
+    position: relative;
+    overflow: hidden;
+    padding: 12px 26px;
+    font-size: 16px;
+    background: linear-gradient(180deg, #4CAF50 0%, #3ca24a 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(19, 65, 29, 0.12);
+    transition: transform 180ms cubic-bezier(.2,.9,.2,1), box-shadow 180ms;
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+/* hover yükselme ve gölge */
+#gosterBtn:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 18px 40px rgba(19, 65, 29, 0.16);
+}
+
+/* tıklama anı (daha küçük) */
+#gosterBtn:active {
+    transform: translateY(-2px) scale(0.98);
+}
+
+/* klavye odak halkası */
+#gosterBtn:focus {
+    outline: none;
+    box-shadow: 0 0 0 8px rgba(76, 175, 80, 0.12);
+    border-radius: 12px;
+}
+
+/* basma "ripple" için pseudo-element */
+#gosterBtn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.15) 40%, rgba(255,255,255,0) 100%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 700ms cubic-bezier(.2,.7,.2,1), opacity 700ms;
+}
+
+/* aktifken pseudo-element büyür ve belirir */
+#gosterBtn:active::after {
+    transform: translate(-50%, -50%) scale(36);
+    opacity: 0.12;
+    transition: transform 700ms cubic-bezier(.2,.7,.2,1), opacity 700ms;
+}
+
+/* yazı kutusu */
+#yazi {
+    margin-top: 18px;
+    font-size: 20px;
+    color: #062b17;
+    text-align: center;
+    max-width: 80%;
+    line-height: 1.4;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.15);
+    /* başlangıç durumu: görünmez */
+    opacity: 0;
+    transform: translateY(8px) scale(0.995);
+}
+
+/* boş değilse (JS textContent ile doldurduğunda) güzel bir giriş animasyonu çalışır */
+#yazi:not(:empty) {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 420ms cubic-bezier(.2,.8,.2,1), transform 420ms cubic-bezier(.2,.8,.2,1);
+    animation: popFade 600ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* hafif pop & fade animasyonu */
+@keyframes popFade {
+    0% { opacity: 0; transform: translateY(10px) scale(.98); filter: blur(2px); }
+    60% { opacity: 1; transform: translateY(-4px) scale(1.02); filter: blur(0); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* arka plan hareketi */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* erişilebilirlik: hareket azaltılmışsa animasyonları kapat */
+@media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+    #gosterBtn, #gosterBtn::after, #yazi { transition: none !important; animation: none !important; }
+}
+
+/* ekstra süslemeler: gösterişli giriş animasyonu için */
+#yazi {
+    position: relative;
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 10px;
+}
+
+/* gradient text + glow (daha gösterişli görünüm) */
+#yazi:not(:empty) {
+    /* önceki temel reveal'i koruyup yükseltiyoruz */
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 420ms cubic-bezier(.2,.8,.2,1), transform 420ms cubic-bezier(.2,.8,.2,1);
+    animation: fancyPop 900ms cubic-bezier(.2,.8,.2,1);
+    background: linear-gradient(90deg, #ffd27d 0%, #ff9a9e 45%, #b39cff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 6px 20px rgba(99, 50, 255, 0.12), 0 1px 0 rgba(255,255,255,0.12);
+}
+
+/* parlama / shimmer efekti (tek seferlik kaydırma) */
+#yazi:not(:empty)::before {
+    content: "";
+    position: absolute;
+    left: -30%;
+    top: -10%;
+    width: 160%;
+    height: 120%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.0) 100%);
+    transform: translateX(-100%) rotate(-8deg);
+    filter: blur(8px);
+    opacity: 0.95;
+    pointer-events: none;
+    animation: shimmerSlide 900ms cubic-bezier(.2,.8,.2,1) 120ms 1;
+    border-radius: 12px;
+    mix-blend-mode: screen;
+}
+
+/* konfeti patlaması hissi için çoklu gölgeler (tek elementle birden çok parçacık) */
+#yazi:not(:empty)::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 6px;
+    height: 6px;
+    background: #ffd27d;
+    border-radius: 2px;
+    transform-origin: 50% 100%;
+    pointer-events: none;
+    box-shadow:
+      -6px -6px #ff6b6b,
+      -12px -10px #f6c90e,
+      6px -14px #6bf07a,
+      12px -8px #6bb3ff,
+      -18px -18px #b39cff,
+      18px -14px #ff9a9e;
+    opacity: 0;
+    animation: confettiBurst 900ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* ana animasyonlar */
+@keyframes fancyPop {
+    0% { opacity: 0; transform: translateY(14px) scale(.86) rotate(-2deg); filter: blur(3px); text-shadow: none; }
+    40% { transform: translateY(-8px) scale(1.08) rotate(3deg); filter: blur(0); opacity: 1; }
+    70% { transform: translateY(2px) scale(.98) rotate(-1deg); }
+    100% { transform: translateY(0) scale(1) rotate(0); }
+}
+@keyframes shimmerSlide {
+    0% { transform: translateX(-100%) rotate(-8deg); opacity: 0; }
+    30% { opacity: 0.9; }
+    100% { transform: translateX(100%) rotate(-8deg); opacity: 0; }
+}
+@keyframes confettiBurst {
+    0% { opacity: 0; transform: translateY(0) scale(0.6) rotate(0); filter: blur(1px); }
+    10% { opacity: 1; transform: translateY(-6px) scale(1.1) rotate(10deg); }
+    40% { transform: translateY(-28px) rotate(-18deg); opacity: 1; }
+    100% { transform: translateY(-60px) rotate(80deg); opacity: 0; filter: blur(2px); }
+}
+
+/* hafif halo / glow */
+#yazi:not(:empty) {
+    box-shadow: 0 10px 40px rgba(108, 68, 255, 0.08), inset 0 -4px 30px rgba(255,210,130,0.04);
+}
+
+/* gelişmiş harf animasyonu + konfeti canvas stile eklemeleri */
+#yazi {
+    /* küçük görünüm ayarları zaten var; perspective için reveal sınıfı kullanacağız */
+    perspective: 900px;
+    -webkit-font-smoothing: antialiased;
+}
+#yazi.reveal { perspective: 900px; }
+
+.char {
+    display: inline-block;
+    will-change: transform, opacity;
+    /* varsayılan inline görünüm; JS absolute yaptığında inline-block korunur */
+    pointer-events: none;
+}
+
+@keyframes charIn {
+    0% {
+        opacity: 0;
+        transform: rotateX(85deg) translateY(18px) scale(.86);
+        filter: blur(6px);
+    }
+    55% {
+        opacity: 1;
+        transform: rotateX(-12deg) translateY(-8px) scale(1.08);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 1;
+        transform: rotateX(0deg) translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+/* son karakterden sonra hafif sallanma hissi */
+#yazi.reveal .char:last-child {
+    animation-name: charIn, lastWiggle;
+    animation-duration: 720ms, 1100ms;
+    animation-delay: 0ms, 780ms;
+    animation-fill-mode: forwards;
+}
+@keyframes lastWiggle {
+    0% { transform: translateY(0); }
+    30% { transform: translateY(-8px) rotate(-1.2deg); }
+    60% { transform: translateY(3px) rotate(1.2deg); }
+    100% { transform: translateY(0); }
+}
+
+/* tam ekran konfeti canvas */
+.confetti-canvas {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: normal;
+}
+
+/* reduced-motion uyumu */
+@media (prefers-reduced-motion: reduce) {
+    .char, #yazi::before, #yazi::after, .confetti-canvas { 
+        animation: none !important;
+        transition: none !important;
+    }
+}
